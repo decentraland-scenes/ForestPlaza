@@ -1,6 +1,6 @@
 import { RemoteQuestTracker } from '@dcl/RemoteQuestTracker'
 import { ProgressStatus } from 'node_modules/dcl-quests-client/index'
-import { stepIds, taskIds } from './quests'
+import { progressInQuest, stepIds, taskIds } from './quests'
 
 export class Herb extends Entity {
   private task: taskIds
@@ -25,11 +25,12 @@ export class Herb extends Entity {
       new OnPointerDown(
         () => {
           this.pick()
-          this.client.makeProgress(this.task, {
-            type: 'step-based',
-            stepStatus: ProgressStatus.COMPLETED,
-            stepId: this.step,
-          })
+          progressInQuest(this.task, this.step)
+          //   this.client.makeProgress(this.task, {
+          //     type: 'step-based',
+          //     stepStatus: ProgressStatus.COMPLETED,
+          //     stepId: this.step,
+          //   })
         },
         {
           hoverText: 'Collect',

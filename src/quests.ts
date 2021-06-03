@@ -53,3 +53,16 @@ export async function handleQuests() {
 
   return client
 }
+
+export function progressInQuest(task: string, step?: string) {
+  client.makeProgress(
+    task,
+    step
+      ? {
+          type: 'step-based',
+          stepStatus: ProgressStatus.COMPLETED,
+          stepId: step,
+        }
+      : { type: 'single', status: ProgressStatus.COMPLETED }
+  )
+}
