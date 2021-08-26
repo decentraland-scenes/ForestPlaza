@@ -1,6 +1,5 @@
 import { RemoteQuestTracker } from '@dcl/ecs-quests'
-import { ProgressStatus } from 'dcl-quests-client/quests-client-amd'
-import { QuestState } from 'node_modules/dcl-quests-client/index'
+import { ProgressStatus, QuestState } from 'dcl-quests-client/quests-client-amd'
 import { query } from '@dcl/quests-query'
 import { Herb } from './herb'
 
@@ -13,21 +12,21 @@ export enum taskIds {
   talkChaman = '285c92a6-84b8-4a68-a083-c8737c89d17a',
   gems = '58e29d3b-bf6e-416b-bb77-35756120ab9c',
   placeGems = 'ae33a6b2-f4d2-48f6-bed6-406a8873b556',
-  caliz = 'd142506e-84da-4955-8e56-a3e0fa5ae4b5',
+  calis = 'd142506e-84da-4955-8e56-a3e0fa5ae4b5',
   outro = 'cb67b6df-990c-4bcf-82b9-175126f7a302',
 }
 
-export enum stepIds {
-  forest1 = '2ba283ea-244b-4b59-9e9b-ae873a2b19e8',
-  forest2 = '2678960d-f64e-4b8d-9eeb-2a5eedf58c2f',
-  forest3 = 'bac43e62-00d1-491e-bc6a-0859827ea466',
-  asian1 = '8a55e6db-62e5-4fd4-84dd-49acbc8b5c27',
-  asian2 = 'fdc54c32-0642-48fa-91ac-fa58e3de9b52',
-  asian3 = 'dba1df81-cb7b-4fa9-9689-3ba24f28689f',
-  medieval1 = 'be070e38-3533-4e10-b587-9ee3636314e9',
-  medieval2 = 'eab99eec-b774-49ec-beb9-27f17369078b',
-  medieval3 = '20e294a2-f33d-42ed-9986-0d227fe36e35',
-}
+// export enum stepIds {
+//   forest1 = '2ba283ea-244b-4b59-9e9b-ae873a2b19e8',
+//   forest2 = '2678960d-f64e-4b8d-9eeb-2a5eedf58c2f',
+//   forest3 = 'bac43e62-00d1-491e-bc6a-0859827ea466',
+//   asian1 = '8a55e6db-62e5-4fd4-84dd-49acbc8b5c27',
+//   asian2 = 'fdc54c32-0642-48fa-91ac-fa58e3de9b52',
+//   asian3 = 'dba1df81-cb7b-4fa9-9689-3ba24f28689f',
+//   medieval1 = 'be070e38-3533-4e10-b587-9ee3636314e9',
+//   medieval2 = 'eab99eec-b774-49ec-beb9-27f17369078b',
+//   medieval3 = '20e294a2-f33d-42ed-9986-0d227fe36e35',
+// }
 
 export let client: RemoteQuestTracker
 
@@ -41,28 +40,57 @@ export async function handleQuests() {
   log('QUEST ', questProg)
   if (questProg.progressStatus != ProgressStatus.COMPLETED) {
     if (!query(questProg).isTaskCompleted(taskIds.forestHerb)) {
+      //   if (!query(questProg).isStepCompleted(stepIds.forest1)) {
       let herb1 = new Herb(
-        'models/Bush_Fantasy_01.glb',
-        { position: new Vector3(1, 1, 1) },
+        'models/berry.glb',
+        { position: new Vector3(266, 2.9, 189), scale: new Vector3(2, 2, 2) },
         taskIds.forestHerb,
-        stepIds.forest1,
+        //   stepIds.forest1,
         client
       )
+      //   }
+
+      //   if (!query(questProg).isStepCompleted(stepIds.forest2)) {
+      let herb2 = new Herb(
+        'models/berry.glb',
+        { position: new Vector3(169, 10.2, 167), scale: new Vector3(2, 2, 2) },
+        taskIds.forestHerb,
+        //   stepIds.forest2,
+        client
+      )
+      //   }
+      //   if (!query(questProg).isStepCompleted(stepIds.forest3)) {
+      let herb3 = new Herb(
+        'models/berry.glb',
+        { position: new Vector3(58, 5.65, 296), scale: new Vector3(2, 2, 2) },
+        taskIds.forestHerb,
+        //   stepIds.forest3,
+        client
+      )
+      //   }
     }
   }
 
   return client
 }
 
-export function progressInQuest(task: string, step?: string) {
+// export function progressInQuest(task: string, step?: string) {
+//   client.makeProgress(
+//     task,
+//     step
+//       ? {
+//           type: 'step-based',
+//           stepStatus: ProgressStatus.COMPLETED,
+//           stepId: step,
+//         }
+//       : { type: 'single', status: ProgressStatus.COMPLETED }
+//   )
+// }
+export function progressInQuest(step: string, multipleSteps?: boolean) {
   client.makeProgress(
-    task,
-    step
-      ? {
-          type: 'step-based',
-          stepStatus: ProgressStatus.COMPLETED,
-          stepId: step,
-        }
+    step,
+    multipleSteps
+      ? { type: 'numeric', operation: 'increase', amount: 1 }
       : { type: 'single', status: ProgressStatus.COMPLETED }
   )
 }
